@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>দৈনিক খবর - News Portal</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <h1 class="logo">দৈনিক খবর</h1>
+            <p class="tagline">আপনার বিশ্বস্ত খবরের উৎস</p>
+        </div>
+    </header>
+
+    <nav class="navbar">
+        <div class="container">
+            <input type="text" id="searchInput" class="search-box" placeholder="খবর খুঁজুন...">
+            <div class="categories" id="categories"></div>
+        </div>
+    </nav>
+
+    <main class="container">
+        <section class="featured-section">
+            <h2>প্রধান খবর</h2>
+            <div class="featured-articles" id="featured"></div>
+        </section>
+
+        <section class="articles-section">
+            <h2>সর্বশেষ খবর</h2>
+            <div class="articles" id="articles"></div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2027 দৈনিক খবর | সব অধিকার সংরক্ষিত</p>
+        </div>
+    </footer>
+
+    <div id="articleModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div id="articleDetail"></div>
+        </div>
+    </div>
+
+    <script src="/static/js/app.js"></script>
+</body>
+</html>
