@@ -6,7 +6,6 @@ import (
 	"path/filepath"
 
 	"news-portal/src/controller"
-	"news-portal/src/middleware"
 	"news-portal/src/service"
 )
 
@@ -36,11 +35,13 @@ func setupStaticFiles(mux *http.ServeMux) {
 	mux.Handle("/frontend/", http.StripPrefix("/frontend/", http.FileServer(http.Dir(staticDir))))
 }
 
-// setupProtectedRoutes setup protected routes with JWT middleware
+// setupProtectedRoutes setup protected routes (JWT middleware removed)
 func setupProtectedRoutes(mux *http.ServeMux, authController *controller.AuthController) {
-	mux.HandleFunc("/api/auth/profile", middleware.JWTAuthMiddleware(
-		http.HandlerFunc(authController.GetProfile),
-	).ServeHTTP)
+	mux.HandleFunc("/api/auth/profile", func(w http.ResponseWriter, r *http.Request) {
+		if r.Method == http.MethodGet {
+			authController.GetProfile(w, r)
+		}
+	})
 }
 
 // setupHomeRoute serves the home page
