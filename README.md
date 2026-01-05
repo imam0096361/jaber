@@ -1,7 +1,5 @@
 # News Portal API
 
-একটি আধুনিক news portal API যা Go এবং SQLite দিয়ে তৈরি।
-
 ## Features
 
 - ✅ Article Management (Create, Read, Update)
