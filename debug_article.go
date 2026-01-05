@@ -23,7 +23,7 @@ func main() {
 	payload := map[string]interface{}{
 		"title":    "Debug Article With Image",
 		"content":  "Testing with image pointer.",
-		"category": "Technology",
+		"category": "প্রযুক্তি",
 		"author":   "Debug Bot",
 		"featured": true,
 		"image":    imagePath,
