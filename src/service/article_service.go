@@ -83,12 +83,17 @@ func (s *ArticleService) GetArticleByID(id string) (*model.Article, error) {
 }
 
 func (s *ArticleService) CreateArticle(article *model.Article) (*model.Article, error) {
+	log.Println("DEBUG: Starting CreateArticle service")
 	query := `INSERT INTO articles (title, content, category, author, image, featured) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id`
+	log.Printf("DEBUG: Executing query: %s", query)
+	
 	err := database.DB.QueryRow(query, article.Title, article.Content, article.Category, article.Author, article.Image, article.Featured).Scan(&article.ID)
 	if err != nil {
+		log.Printf("DEBUG: Database error: %v", err)
 		return nil, err
 	}
 
+	log.Printf("DEBUG: Article created with ID: %d", article.ID)
 	return article, nil
 }
 
