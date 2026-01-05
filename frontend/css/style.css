@@ -371,6 +371,26 @@ body {
 .form-group textarea {
     resize: vertical;
     min-height: 150px;
+    /* Performance optimizations for large text */
+    contain: layout paint;
+    will-change: contents;
+}
+
+/* High performance mode for large content */
+.large-content-area {
+    font-family: 'Courier New', Courier, monospace; /* Monospace fonts are faster to render */
+    font-size: 16px;
+    line-height: 1.4;
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 0; /* Removing radius helps performance slightly */
+    box-shadow: none !important; /* No shadows */
+    width: 100%;
+}
+
+.large-content-area:focus {
+    outline: 2px solid #667eea;
+    border-color: #667eea;
 }
 
 .btn-submit {
