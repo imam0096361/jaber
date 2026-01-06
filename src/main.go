@@ -45,3 +45,23 @@ func main() {
 	fmt.Printf("News Portal running on http://localhost%s\n", port)
 	log.Fatal(http.ListenAndServe(port, mux))
 }
+/*APP_ENV=development
+APP_PORT=9998
+APP_HOST=localhost
+
+# Database Configuration (PostgreSQL)
+DB_TYPE=postgres
+DB_HOST=localhost
+DB_PORT=5432
+DB_USER=postgres
+DB_PASSWORD=root
+DB_NAME=news
+
+# Server Config
+SERVER_TIMEOUT=30
+MAX_UPLOAD_SIZE=10485760
+
+# Logging
+LOG_LEVEL=info
+LOG_FILE=./logs/app.log
+DEBUG=false
