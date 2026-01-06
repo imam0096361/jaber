@@ -5,139 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>দৈনিক খবর - অ্যাডমিন</title>
-    <!-- CSS সরাসরি ফাইলের ভেতর -->
+    <link rel="stylesheet" href="/frontend/css/style.css">
     <style>
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: sans-serif;
-            background: #f0f2f5;
-        }
-
-        .header {
-            background: #1877f2;
-            color: white;
-            padding: 15px;
-            text-align: center;
-        }
-
-        .container {
-            max-width: 600px;
-            margin: 20px auto;
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        h1 {
-            margin: 0;
-            font-size: 24px;
-        }
-
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-
-        input,
-        select,
-        textarea {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            box-sizing: border-box;
-            font-size: 16px;
-        }
-
-        textarea {
-            height: 150px;
-            resize: vertical;
-        }
-
-        button {
-            width: 100%;
-            padding: 12px;
-            background: #42b72a;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            font-size: 16px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        button:hover {
-            background: #36a420;
-        }
-    </style>
-</head>
-
-<body>
-
-    <div class="header">
-        <h1>অ্যাডমিন প্যানেল</h1>
-    </div>
-
-    <div class="container">
-        <!-- ফর্ম শুরু -->
-        <form id="newsForm">
-
-            <div class="form-group">
-                <label>খবরের শিরোনাম</label>
-                <input type="text" id="title" required placeholder="শিরোনাম লিখুন...">
-            </div>
-
-            <div class="form-group">
-                <label>বিস্তারিত খবর</label>
-                <!-- প্লেইন টেক্সট এরিয়া, কোনো ফরম্যাটিং বাটন নেই -->
-                <textarea id="content" required placeholder="বিস্তারিত খবর লিখুন..."></textarea>
-            </div>
-
-            <div class="form-group">
-                <label>ক্যাটাগরি</label>
-                <select id="category">
-                    <option value="রাজনীতি">রাজনীতি</option>
-                    <option value="খেলা">খেলা</option>
-                    <option value="বিনোদন">বিনোদন</option>
-                    <option value="অন্যান্য">অন্যান্য</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label>খবরের ছবি</label>
-                <input type="file" id="imageInput" accept="image/*">
-                <!-- ইমেজ প্রিভিউ -->
-                <div id="imagePreview" style="margin-top: 10px;"></div>
-            </div>
-
-            <div class="form-group">
-                <label>লেখকের নাম</label>
-                <input type="text" id="author" required>
-            </div>
-
-            <button type="submit" id="submitBtn">খবর প্রকাশ করুন</button>
-        </form>
-    </div>
-
-    <!-- কাস্টম পপআপ মোডাল -->
-    <div id="statusPopup" class="popup-overlay">
-        <div class="popup-content">
-            <div id="popupIcon" class="popup-icon"></div>
-            <h2 id="popupTitle"></h2>
-            <p id="popupMessage"></p>
-            <button onclick="closePopup()">ঠিক আছে</button>
-        </div>
-    </div>
-
-    <!-- স্টাইল -->
-    <style>
+        /* CSS এর বাইরে প্রয়োজনীয় কাস্টম স্টাইল */
         .popup-overlay {
             display: none;
             position: fixed;
@@ -243,6 +113,80 @@
             }
         }
     </style>
+</head>
+
+<body>
+
+    <header class="header">
+        <div class="container">
+            <h1>অ্যাডমিন প্যানেল</h1>
+            <p class="tagline">নতুন খবর প্রকাশ করুন</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="admin-section">
+            <!-- ফর্ম শুরু -->
+            <form id="newsForm">
+
+                <div class="form-group">
+                    <label>খবরের শিরোনাম</label>
+                    <input type="text" id="title" required placeholder="শিরোনাম লিখুন...">
+                </div>
+
+                <div class="form-group">
+                    <label>বিস্তারিত খবর</label>
+                    <!-- প্লেইন টেক্সট এরিয়া, অপ্টিমাইজড ক্লাসহ -->
+                    <textarea id="content" class="large-content-area" required
+                        placeholder="বিস্তারিত খবর লিখুন..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>ক্যাটাগরি</label>
+                    <select id="category">
+                        <option value="জাতীয়">জাতীয়</option>
+                        <option value="রাজনীতি">রাজনীতি</option>
+                        <option value="খেলাধুলা">খেলাধুলা</option>
+                        <option value="প্রযুক্তি">প্রযুক্তি</option>
+                        <option value="স্বাস্থ্য">স্বাস্থ্য</option>
+                        <option value="বিনোদন">বিনোদন</option>
+                        <option value="আন্তর্জাতিক">আন্তর্জাতিক</option>
+                        <option value="অন্যান্য">অন্যান্য</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>খবরের ছবি</label>
+                    <input type="file" id="imageInput" accept="image/*">
+                    <!-- ইমেজ প্রিভিউ -->
+                    <div id="imagePreview"></div>
+                </div>
+
+                <div class="form-group">
+                    <label>লেখকের নাম</label>
+                    <input type="text" id="author" required>
+                </div>
+
+                <button type="submit" id="submitBtn" class="btn-submit">খবর প্রকাশ করুন</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- কাস্টম পপআপ মোডাল -->
+    <div id="statusPopup" class="popup-overlay">
+        <div class="popup-content">
+            <div id="popupIcon" class="popup-icon"></div>
+            <h2 id="popupTitle"></h2>
+            <p id="popupMessage"></p>
+            <button onclick="closePopup()">ঠিক আছে</button>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2027 দৈনিক খবর | অ্যাডমিন প্যানেল</p>
+        </div>
+    </footer>
 
     <!-- জাভাস্ক্রিপ্ট -->
     <script>
@@ -272,18 +216,65 @@
             document.getElementById('statusPopup').style.display = 'none';
         }
 
+        // ইমেজ কমপ্রেশন ফাংশন
+        function compressImage(file, maxWidth, maxHeight, quality) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = event => {
+                    const img = new Image();
+                    img.src = event.target.result;
+                    img.onload = () => {
+                        let width = img.width;
+                        let height = img.height;
+
+                        if (width > height) {
+                            if (width > maxWidth) {
+                                height = Math.round((height * maxWidth) / width);
+                                width = maxWidth;
+                            }
+                        } else {
+                            if (height > maxHeight) {
+                                width = Math.round((width * maxHeight) / height);
+                                height = maxHeight;
+                            }
+                        }
+
+                        const canvas = document.createElement('canvas');
+                        canvas.width = width;
+                        canvas.height = height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, width, height);
+
+                        canvas.toBlob(blob => {
+                            resolve(blob);
+                        }, 'image/jpeg', quality);
+                    };
+                    img.onerror = error => reject(error);
+                };
+                reader.onerror = error => reject(error);
+            });
+        }
+
         // ইমেজ আপলোড হ্যান্ডলার
         document.getElementById('imageInput').addEventListener('change', async function (e) {
             const file = e.target.files[0];
             if (!file) return;
 
-            const formData = new FormData();
-            formData.append('image', file);
-
             const previewDiv = document.getElementById('imagePreview');
-            previewDiv.innerHTML = '<p>আপলোড হচ্ছে...</p>';
+            previewDiv.innerHTML = '<p class="loading">প্রসেসিং এবং আপলোড হচ্ছে...</p>';
 
             try {
+                // ১. ইমেজ কমপ্রেশন (Max 800px, 70% Quality)
+                const compressedBlob = await compressImage(file, 800, 800, 0.7);
+                const compressedFile = new File([compressedBlob], file.name.replace(/\.[^/.]+$/, "") + ".jpg", {
+                    type: "image/jpeg"
+                });
+
+                // ২. আপলোড
+                const formData = new FormData();
+                formData.append('image', compressedFile);
+
                 const response = await fetch('/api/upload-image', {
                     method: 'POST',
                     body: formData
@@ -299,8 +290,8 @@
                 }
             } catch (error) {
                 console.error('Upload Error:', error);
-                previewDiv.innerHTML = '<p style="color: red;">সার্ভার এরর!</p>';
-                showPopup('error', 'ত্রুটি!', 'সার্ভারে সংযোগ করা যাচ্ছে না।');
+                previewDiv.innerHTML = '<p style="color: red;">ত্রুটি!</p>';
+                showPopup('error', 'ত্রুটি!', 'ইমেজ প্রসেসিং বা আপলোডে সমস্যা হয়েছে।');
             }
         });
 

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"news-portal/src/model"
 	"regexp"
+	"strings"
 )
 
 // Article Validation
@@ -16,8 +17,10 @@ func ValidateArticle(article *model.Article) []string {
 	if len(article.Title) < 3 {
 		errors = append(errors, "শিরোনাম কমপক্ষে ৩ অক্ষরের হতে হবে")
 	}
-	if len(article.Title) > 200 {
-		errors = append(errors, "শিরোনাম ২০০ অক্ষরের বেশি হতে পারবে না")
+	// Word count check
+	wordCount := len(strings.Fields(article.Title))
+	if wordCount > 500 {
+		errors = append(errors, "শিরোনাম ৫০০ শব্দের বেশি হতে পারবে না")
 	}
 
 	if article.Content == "" {

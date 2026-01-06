@@ -7,10 +7,10 @@ async function loadCategories() {
     try {
         const response = await fetch(`${API_BASE}/categories`);
         const categories = await response.json();
-        
+
         const categoriesDiv = document.getElementById('categories');
         categoriesDiv.innerHTML = '';
-        
+
         categories.forEach(cat => {
             const btn = document.createElement('button');
             btn.className = 'category-btn' + (cat === 'সব' ? ' active' : '');
@@ -40,32 +40,32 @@ async function loadFeatured() {
     try {
         const response = await fetch(`${API_BASE}/featured`);
         const articles = await response.json();
-        
+
         const featuredDiv = document.getElementById('featured');
         featuredDiv.innerHTML = '';
-        
+
         if (!articles || articles.length === 0) {
             featuredDiv.innerHTML = '<p>কোনো খবর নেই</p>';
             return;
         }
-        
+
         articles.forEach(article => {
             const div = document.createElement('div');
             div.className = 'featured-article';
             div.onclick = () => openArticle(article.id);
-            
+
             const date = new Date(article.created).toLocaleDateString('bn-BD', {
                 year: 'numeric',
                 month: 'long',
                 day: 'numeric'
             });
-            
+
             div.innerHTML = `
                 <h3>${article.title}</h3>
                 <div class="meta">${article.author} | ${date}</div>
                 <div class="preview">${article.content.substring(0, 150)}...</div>
             `;
-            
+
             featuredDiv.appendChild(div);
         });
     } catch (error) {
@@ -78,7 +78,7 @@ async function loadArticles() {
     try {
         const searchQuery = document.getElementById('searchInput').value;
         let url = `${API_BASE}/articles`;
-        
+
         const params = new URLSearchParams();
         if (currentCategory !== 'সব') {
             params.append('category', currentCategory);
@@ -86,36 +86,36 @@ async function loadArticles() {
         if (searchQuery) {
             params.append('search', searchQuery);
         }
-        
+
         if (params.toString()) {
             url += '?' + params.toString();
         }
-        
+
         const response = await fetch(url);
         const articles = await response.json();
-        
+
         const articlesDiv = document.getElementById('articles');
         articlesDiv.innerHTML = '';
-        
+
         if (!articles || articles.length === 0) {
             articlesDiv.innerHTML = '<p>কোনো খবর নেই</p>';
             return;
         }
-        
+
         articles.forEach(article => {
             const div = document.createElement('div');
             div.className = 'article-card';
             div.onclick = () => openArticle(article.id);
-            
+
             const date = new Date(article.created).toLocaleDateString('bn-BD', {
                 year: 'numeric',
                 month: 'long',
                 day: 'numeric'
             });
-            
+
             div.innerHTML = `
                 <div class="article-image">
-                    ${article.image ? `<img src="${article.image}" alt="${article.title}" style="width: 100%; height: 100%; object-fit: cover;">` : '📰'}
+                    ${article.image ? `<img src="${article.image}" alt="${article.title}" loading="lazy" style="width: 100%; height: 100%; object-fit: cover;">` : '📰'}
                 </div>
                 <div class="article-content">
                     <span class="category">${article.category}</span>
@@ -127,7 +127,7 @@ async function loadArticles() {
                     </div>
                 </div>
             `;
-            
+
             articlesDiv.appendChild(div);
         });
     } catch (error) {
@@ -140,7 +140,7 @@ async function openArticle(id) {
     try {
         const response = await fetch(`${API_BASE}/article?id=${id}`);
         const article = await response.json();
-        
+
         const date = new Date(article.created).toLocaleDateString('bn-BD', {
             year: 'numeric',
             month: 'long',
@@ -148,7 +148,7 @@ async function openArticle(id) {
             hour: '2-digit',
             minute: '2-digit'
         });
-        
+
         const detailDiv = document.getElementById('articleDetail');
         detailDiv.innerHTML = `
             <div class="article-detail">
@@ -160,7 +160,7 @@ async function openArticle(id) {
                 <div class="content">${article.content}</div>
             </div>
         `;
-        
+
         const modal = document.getElementById('articleModal');
         modal.classList.add('show');
     } catch (error) {
@@ -178,7 +178,7 @@ document.addEventListener('DOMContentLoaded', () => {
     loadCategories();
     loadFeatured();
     loadArticles();
-    
+
     // Search functionality
     const searchInput = document.getElementById('searchInput');
     let searchTimeout;
@@ -188,11 +188,11 @@ document.addEventListener('DOMContentLoaded', () => {
             loadArticles();
         }, 500);
     });
-    
+
     // Modal close
     const modal = document.getElementById('articleModal');
     const closeBtn = document.querySelector('.close');
-    
+
     closeBtn.onclick = closeModal;
     window.onclick = (event) => {
         if (event.target === modal) {

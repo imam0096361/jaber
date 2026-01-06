@@ -155,7 +155,7 @@ func (d *Database) createPostgresTables() error {
 	-- Articles Table
 	CREATE TABLE IF NOT EXISTS articles (
 		id SERIAL PRIMARY KEY,
-		title VARCHAR(255) NOT NULL,
+		title TEXT NOT NULL,
 		content TEXT NOT NULL,
 		category VARCHAR(100) NOT NULL,
 		author VARCHAR(100) NOT NULL,
@@ -274,6 +274,13 @@ func (d *Database) insertSampleData() {
 			content:  "দেশে স্বাস্থ্যসেবা খাতে যুগান্তকারী পরিবর্তন আসতে চলেছে যা সাধারণ মানুষের জীবনযাত্রার মান উন্নত করবে।",
 			category: "স্বাস্থ্য",
 			author:   "হেলথ করেসপন্ডেন্ট",
+			featured: false,
+		},
+		{
+			title:    "বিশ্ববাজারে তেলের দাম কমলো",
+			content:  "আন্তর্জাতিক বাজারে অপরিশোধিত তেলের দাম কমেছে। এতে বিশ্ব অর্থনীতিতে স্বস্তি ফিরবে বলে আশা করা হচ্ছে।",
+			category: "আন্তর্জাতিক",
+			author:   "আন্তর্জাতিক ডেস্ক",
 			featured: false,
 		},
 	}

@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="bn">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>দৈনিক খবর - News Portal</title>
     <link rel="stylesheet" href="/frontend/css/style.css">
 </head>
+
 <body>
     <header class="header">
         <div class="container">
@@ -17,7 +19,9 @@
     <nav class="navbar">
         <div class="container">
             <input type="text" id="searchInput" class="search-box" placeholder="খবর খুঁজুন...">
-            <div class="categories" id="categories"></div>
+            <div class="categories-wrapper">
+                <div class="categories" id="categories"></div>
+            </div>
         </div>
     </nav>
 
@@ -48,4 +52,5 @@
 
     <script src="/frontend/js/app.js"></script>
 </body>
+
 </html>
