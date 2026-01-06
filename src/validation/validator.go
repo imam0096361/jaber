@@ -11,28 +11,28 @@ func ValidateArticle(article *model.Article) []string {
 	var errors []string
 
 	if article.Title == "" {
-		errors = append(errors, "Title is required")
+		errors = append(errors, "শিরোনাম প্রয়োজন")
 	}
 	if len(article.Title) < 3 {
-		errors = append(errors, "Title must be at least 3 characters")
+		errors = append(errors, "শিরোনাম কমপক্ষে ৩ অক্ষরের হতে হবে")
 	}
 	if len(article.Title) > 200 {
-		errors = append(errors, "Title must not exceed 200 characters")
+		errors = append(errors, "শিরোনাম ২০০ অক্ষরের বেশি হতে পারবে না")
 	}
 
 	if article.Content == "" {
-		errors = append(errors, "Content is required")
+		errors = append(errors, "খবর এর বিস্তারিত প্রয়োজন")
 	}
 	if len(article.Content) < 10 {
-		errors = append(errors, "Content must be at least 10 characters")
+		errors = append(errors, "খবর কমপক্ষে ১০ অক্ষরের হতে হবে")
 	}
 
 	if article.Category == "" {
-		errors = append(errors, "Category is required")
+		errors = append(errors, "ক্যাটাগরি প্রয়োজন")
 	}
 
 	if article.Author == "" {
-		errors = append(errors, "Author is required")
+		errors = append(errors, "লেখক এর নাম প্রয়োজন")
 	}
 
 	return errors

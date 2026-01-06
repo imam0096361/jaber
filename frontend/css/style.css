@@ -373,9 +373,6 @@ body {
 .form-group textarea {
     resize: vertical;
     min-height: 150px;
-    /* Performance optimizations for large text */
-    contain: layout paint;
-    will-change: contents;
 }
 
 /* High performance mode for large content */
@@ -436,18 +433,22 @@ body {
 
 /* Footer */
 .footer {
-    background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
-    color: white;
-    padding: 30px 0;
+    background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
+    color: #e2e8f0;
+    padding: 40px 0;
     margin-top: auto;
     text-align: center;
     box-shadow: 0 -4px 6px -1px rgba(0, 0, 0, 0.1);
-    font-size: 0.95em;
+    font-size: 1em;
     letter-spacing: 0.5px;
+    border-top: 5px solid #667eea;
 }
 
 .footer p {
-    opacity: 0.9;
+    opacity: 0.8;
+    margin: 0;
+    font-weight: 500;
+
 }
 
 /* Responsive Design */

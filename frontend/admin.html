@@ -4,82 +4,356 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>অ্যাডমিন - দৈনিক খবর</title>
-    <link rel="stylesheet" href="/frontend/css/style.css">
+    <title>দৈনিক খবর - অ্যাডমিন</title>
+    <!-- CSS সরাসরি ফাইলের ভেতর -->
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: sans-serif;
+            background: #f0f2f5;
+        }
+
+        .header {
+            background: #1877f2;
+            color: white;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+
+        textarea {
+            height: 150px;
+            resize: vertical;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #42b72a;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background: #36a420;
+        }
+    </style>
 </head>
 
 <body>
-    <header class="header">
-        <div class="container">
-            <h1 class="logo">দৈনিক খবর - অ্যাডমিন</h1>
-            <p class="tagline">খবর যোগ করুন</p>
+
+    <div class="header">
+        <h1>অ্যাডমিন প্যানেল</h1>
+    </div>
+
+    <div class="container">
+        <!-- ফর্ম শুরু -->
+        <form id="newsForm">
+
+            <div class="form-group">
+                <label>খবরের শিরোনাম</label>
+                <input type="text" id="title" required placeholder="শিরোনাম লিখুন...">
+            </div>
+
+            <div class="form-group">
+                <label>বিস্তারিত খবর</label>
+                <!-- প্লেইন টেক্সট এরিয়া, কোনো ফরম্যাটিং বাটন নেই -->
+                <textarea id="content" required placeholder="বিস্তারিত খবর লিখুন..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>ক্যাটাগরি</label>
+                <select id="category">
+                    <option value="রাজনীতি">রাজনীতি</option>
+                    <option value="খেলা">খেলা</option>
+                    <option value="বিনোদন">বিনোদন</option>
+                    <option value="অন্যান্য">অন্যান্য</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>খবরের ছবি</label>
+                <input type="file" id="imageInput" accept="image/*">
+                <!-- ইমেজ প্রিভিউ -->
+                <div id="imagePreview" style="margin-top: 10px;"></div>
+            </div>
+
+            <div class="form-group">
+                <label>লেখকের নাম</label>
+                <input type="text" id="author" required>
+            </div>
+
+            <button type="submit" id="submitBtn">খবর প্রকাশ করুন</button>
+        </form>
+    </div>
+
+    <!-- কাস্টম পপআপ মোডাল -->
+    <div id="statusPopup" class="popup-overlay">
+        <div class="popup-content">
+            <div id="popupIcon" class="popup-icon"></div>
+            <h2 id="popupTitle"></h2>
+            <p id="popupMessage"></p>
+            <button onclick="closePopup()">ঠিক আছে</button>
         </div>
-    </header>
+    </div>
 
-    <main class="container">
-        <section class="admin-section">
-            <h2>নতুন খবর যোগ করুন</h2>
-            <form id="articleForm" enctype="multipart/form-data">
-                <div class="form-group">
-                    <label for="title">শিরোনাম:</label>
-                    <input type="text" id="title" name="title" required>
-                </div>
+    <!-- স্টাইল -->
+    <style>
+        .popup-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s ease-out;
+        }
 
-                <div class="form-group">
-                    <label for="content">বিস্তারিত:</label>
-                    <textarea id="content" name="content" rows="20" class="large-content-area" required
-                        spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off"></textarea>
-                    <p style="font-size: 0.8em; color: #666; margin-top: 5px;">⚡ হাই পারফরম্যান্স মোড চালু আছে (১ লক্ষ+
-                        শব্দ সাপোর্টেড)</p>
-                </div>
+        .popup-content {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transform: scale(0.7);
+            animation: scaleUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
 
-                <div class="form-group">
-                    <label for="category">ক্যাটাগরি:</label>
-                    <select id="category" name="category" required>
-                        <option value="">ক্যাটাগরি নির্বাচন করুন</option>
-                        <option value="রাজনীতি">রাজনীতি</option>
-                        <option value="অর্থনীতি">অর্থনীতি</option>
-                        <option value="খেলা">খেলা</option>
-                        <option value="বিনোদন">বিনোদন</option>
-                        <option value="স্বাস্থ্য">স্বাস্থ্য</option>
-                        <option value="শিক্ষা">শিক্ষা</option>
-                        <option value="প্রযুক্তি">প্রযুক্তি</option>
-                        <option value="আন্তর্জাতিক">আন্তর্জাতিক</option>
-                        <option value="অন্যান্য">অন্যান্য</option>
-                    </select>
-                </div>
+        .popup-icon {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            color: white;
+        }
 
-                <div class="form-group">
-                    <label for="author">লেখক:</label>
-                    <input type="text" id="author" name="author" required>
-                </div>
+        .icon-success {
+            background: #42b72a;
+        }
 
-                <div class="form-group">
-                    <label for="image">ছবি:</label>
-                    <input type="file" id="image" name="image" accept="image/*">
-                    <div id="imagePreview"></div>
-                </div>
+        .icon-success::after {
+            content: '✓';
+        }
 
-                <div class="form-group">
-                    <label>
-                        <input type="checkbox" id="featured" name="featured"> প্রধান খবর
-                    </label>
-                </div>
+        .icon-error {
+            background: #ff4444;
+        }
 
-                <button type="submit" class="btn-submit">খবর যোগ করুন</button>
-            </form>
-        </section>
-    </main>
+        .icon-error::after {
+            content: '✕';
+        }
 
-    <footer class="footer">
-        <div class="container">
-            <p>&copy; 2027 দৈনিক খবর | সব অধিকার সংরক্ষিত</p>
-        </div>
-    </footer>
+        .popup-content h2 {
+            margin: 0 0 10px;
+            color: #333;
+        }
 
-    <script src="/frontend/js/admin.js"></script>
+        .popup-content p {
+            margin: 0 0 20px;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .popup-content button {
+            background: #1877f2;
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.2s;
+            width: auto;
+            min-width: 120px;
+        }
+
+        .popup-content button:hover {
+            background: #1565c0;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes scaleUp {
+            from {
+                transform: scale(0.7);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+    </style>
+
+    <!-- জাভাস্ক্রিপ্ট -->
+    <script>
+        let uploadedImageUrl = "";
+
+        // পপআপ ফাংশন
+        function showPopup(type, title, message) {
+            const popup = document.getElementById('statusPopup');
+            const icon = document.getElementById('popupIcon');
+            const titleEl = document.getElementById('popupTitle');
+            const msgEl = document.getElementById('popupMessage');
+
+            popup.style.display = 'flex';
+            titleEl.textContent = title;
+            msgEl.textContent = message;
+
+            // রিসেট ক্লাস
+            icon.className = 'popup-icon';
+            if (type === 'success') {
+                icon.classList.add('icon-success');
+            } else {
+                icon.classList.add('icon-error');
+            }
+        }
+
+        function closePopup() {
+            document.getElementById('statusPopup').style.display = 'none';
+        }
+
+        // ইমেজ আপলোড হ্যান্ডলার
+        document.getElementById('imageInput').addEventListener('change', async function (e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const formData = new FormData();
+            formData.append('image', file);
+
+            const previewDiv = document.getElementById('imagePreview');
+            previewDiv.innerHTML = '<p>আপলোড হচ্ছে...</p>';
+
+            try {
+                const response = await fetch('/api/upload-image', {
+                    method: 'POST',
+                    body: formData
+                });
+                const result = await response.json();
+
+                if (response.ok && result.url) {
+                    uploadedImageUrl = result.url;
+                    previewDiv.innerHTML = `<img src="${result.url}" alt="Preview" style="max-width: 100%; max-height: 200px; border-radius: 5px;">`;
+                } else {
+                    previewDiv.innerHTML = '<p style="color: red;">আপলোড ব্যর্থ হয়েছে!</p>';
+                    showPopup('error', 'ব্যর্থ!', 'ইমেজ আপলোড করা যায়নি: ' + (result.message || 'অজানা ত্রুটি'));
+                }
+            } catch (error) {
+                console.error('Upload Error:', error);
+                previewDiv.innerHTML = '<p style="color: red;">সার্ভার এরর!</p>';
+                showPopup('error', 'ত্রুটি!', 'সার্ভারে সংযোগ করা যাচ্ছে না।');
+            }
+        });
+
+        document.getElementById('newsForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const btn = document.getElementById('submitBtn');
+            const originalText = btn.innerText;
+            btn.innerText = "অপেক্ষা করুন...";
+            btn.disabled = true;
+
+            const data = {
+                title: document.getElementById('title').value,
+                content: document.getElementById('content').value,
+                category: document.getElementById('category').value,
+                author: document.getElementById('author').value,
+                image: uploadedImageUrl,
+                featured: false
+            };
+
+            try {
+                const response = await fetch('/api/add-article', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+
+                if (response.ok) {
+                    showPopup('success', 'সফল!', 'খবর সফলভাবে প্রকাশিত হয়েছে।');
+                    document.getElementById('newsForm').reset();
+                    document.getElementById('imagePreview').innerHTML = '';
+                    uploadedImageUrl = "";
+                } else {
+                    const result = await response.json();
+                    let errorMessage = 'খবর প্রকাশ করা যায়নি।';
+
+                    if (result.errors && Array.isArray(result.errors)) {
+                        errorMessage = result.errors.join('\n');
+                    } else if (result.message) {
+                        errorMessage = result.message;
+                    }
+
+                    showPopup('error', 'ত্রুটি!', errorMessage);
+                }
+            } catch (error) {
+                console.error(error);
+                showPopup('error', 'সার্ভার এরর!', 'সার্ভারে সংযোগ করা যাচ্ছে না বা অন্য কোনো সমস্যা হয়েছে।');
+            } finally {
+                btn.innerText = originalText;
+                btn.disabled = false;
+            }
+        });
+    </script>
 </body>
 
 </html>
-</content>
-<parameter name="filePath">/home/jaber/Desktop/news-portal/frontend/admin.html

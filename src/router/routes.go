@@ -24,6 +24,7 @@ func SetupRoutes(mux *http.ServeMux) {
 	setupArticleRoutes(mux, articleController)
 	setupProtectedRoutes(mux, authController)
 	setupHomeRoute(mux)
+	setupAdminRoute(mux)
 }
 
 // setupStaticFiles serves static files from /frontend directory
@@ -54,4 +55,10 @@ func setupHomeRoute(mux *http.ServeMux) {
 		}
 	})
 }
-//tested
+
+// setupAdminRoute serves the admin page
+func setupAdminRoute(mux *http.ServeMux) {
+	mux.HandleFunc("/admin", func(w http.ResponseWriter, r *http.Request) {
+		http.ServeFile(w, r, "frontend/admin.html")
+	})
+}

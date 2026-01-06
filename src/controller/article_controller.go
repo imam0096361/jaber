@@ -64,13 +64,13 @@ func (c *ArticleController) GetArticleByID(w http.ResponseWriter, r *http.Reques
 
 	id := r.URL.Query().Get("id")
 	if id == "" {
-		http.Error(w, "ID required", http.StatusBadRequest)
+		http.Error(w, "আইডি প্রয়োজন", http.StatusBadRequest)
 		return
 	}
 
 	article, err := c.service.GetArticleByID(id)
 	if err != nil {
-		http.Error(w, "Article not found", http.StatusNotFound)
+		http.Error(w, "খবরটি পাওয়া যায়নি", http.StatusNotFound)
 		return
 	}
 
@@ -93,7 +93,7 @@ func (c *ArticleController) AddArticle(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
 	if r.Method != http.MethodPost {
-		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		http.Error(w, "মেথড অনুমোদিত নয়", http.StatusMethodNotAllowed)
 		return
 	}
 
@@ -101,7 +101,7 @@ func (c *ArticleController) AddArticle(w http.ResponseWriter, r *http.Request) {
 	err := json.NewDecoder(r.Body).Decode(&a)
 	if err != nil {
 		log.Printf("Error decoding JSON: %v", err)
-		http.Error(w, "Invalid JSON", http.StatusBadRequest)
+		http.Error(w, "ভুল JSON ফরম্যাট", http.StatusBadRequest)
 		return
 	}
 
@@ -111,7 +111,7 @@ func (c *ArticleController) AddArticle(w http.ResponseWriter, r *http.Request) {
 	if validationErrors := validation.ValidateArticle(&a); len(validationErrors) > 0 {
 		w.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(w).Encode(map[string]interface{}{
-			"message": "Validation failed",
+			"message": "ভ্যালিডেশন ব্যর্থ হয়েছে",
 			"errors":  validationErrors,
 		})
 		return
@@ -120,14 +120,14 @@ func (c *ArticleController) AddArticle(w http.ResponseWriter, r *http.Request) {
 	article, err := c.service.CreateArticle(&a)
 	if err != nil {
 		log.Printf("Error inserting article: %v", err)
-		http.Error(w, "Error inserting article: "+err.Error(), http.StatusInternalServerError)
+		http.Error(w, "খবর যোগ করতে সমস্যা হয়েছে: "+err.Error(), http.StatusInternalServerError)
 		return
 	}
 
 	article.Created = time.Now()
 
 	response := model.Response{
-		Message: "Article added successfully",
+		Message: "খবর সফলভাবে যোগ করা হয়েছে",
 		Article: article,
 	}
 
@@ -138,7 +138,7 @@ func (c *ArticleController) UploadImage(w http.ResponseWriter, r *http.Request) 
 	w.Header().Set("Content-Type", "application/json")
 
 	if r.Method != http.MethodPost {
-		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		http.Error(w, "মেথড অনুমোদিত নয়", http.StatusMethodNotAllowed)
 		return
 	}
 
@@ -146,22 +146,22 @@ func (c *ArticleController) UploadImage(w http.ResponseWriter, r *http.Request) 
 	uploadsDir := config.UPLOADS_DIR
 	if err := os.MkdirAll(uploadsDir, 0755); err != nil {
 		log.Printf("Error creating uploads directory: %v", err)
-		http.Error(w, "Error creating uploads directory", http.StatusInternalServerError)
+		http.Error(w, "আপলোড ডিরেক্টরি তৈরি করা যায়নি", http.StatusInternalServerError)
 		return
 	}
 
 	// Parse file upload
-	err := r.ParseMultipartForm(config.MAX_FILE_SIZE)
+	err := r.ParseMultipartForm(config.MAX_UPLOAD_SIZE)
 	if err != nil {
 		log.Printf("Error parsing multipart form: %v", err)
-		http.Error(w, "File too large", http.StatusBadRequest)
+		http.Error(w, "ফাইলের আকার অনেক বড়", http.StatusBadRequest)
 		return
 	}
 
 	file, handler, err := r.FormFile("image")
 	if err != nil {
 		log.Printf("Error retrieving file: %v", err)
-		http.Error(w, "Error retrieving file", http.StatusBadRequest)
+		http.Error(w, "ফাইল পাওয়া যায়নি", http.StatusBadRequest)
 		return
 	}
 	defer file.Close()
@@ -174,7 +174,7 @@ func (c *ArticleController) UploadImage(w http.ResponseWriter, r *http.Request) 
 	dst, err := os.Create(filePath)
 	if err != nil {
 		log.Printf("Error creating file: %v", err)
-		http.Error(w, "Error saving file", http.StatusInternalServerError)
+		http.Error(w, "ফাইল সেভ করা যায়নি", http.StatusInternalServerError)
 		return
 	}
 	defer dst.Close()
@@ -183,7 +183,7 @@ func (c *ArticleController) UploadImage(w http.ResponseWriter, r *http.Request) 
 	_, err = io.Copy(dst, file)
 	if err != nil {
 		log.Printf("Error writing file: %v", err)
-		http.Error(w, "Error writing file", http.StatusInternalServerError)
+		http.Error(w, "ফাইল রাইট করা যায়নি", http.StatusInternalServerError)
 		return
 	}
 
@@ -191,7 +191,7 @@ func (c *ArticleController) UploadImage(w http.ResponseWriter, r *http.Request) 
 	log.Printf("Image uploaded successfully: %s", imageURL)
 
 	response := model.ImageUploadResponse{
-		Message: "Image uploaded successfully",
+		Message: "ছবি সফলভাবে আপলোড হয়েছে",
 		URL:     imageURL,
 	}
 

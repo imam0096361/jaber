@@ -27,7 +27,7 @@ var (
 	MAX_UPLOAD_SIZE = int64(10485760)
 )
 
-func init() {
+func LoadConfig() {
 	// Load from environment variables
 	if dbType := os.Getenv("DB_TYPE"); dbType != "" {
 		DBType = dbType

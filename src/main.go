@@ -23,6 +23,7 @@ func init() {
 	}
 
 	godotenv.Load()
+	config.LoadConfig()
 }
 
 func main() {
