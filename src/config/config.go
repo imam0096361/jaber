@@ -66,6 +66,9 @@ func init() {
 }
 
 func loadConfig() {
+	// Enable automatic environment variable reading
+	viper.AutomaticEnv()
+	
 	configPaths := []string{
 		"./",     // For app
 		"../../", // For test folder
@@ -80,5 +83,6 @@ func loadConfig() {
 		}
 	}
 
-	log.Println("Failed to load any config file")
+	// If no config file found, use environment variables
+	log.Println("No config file found, using environment variables")
 }
