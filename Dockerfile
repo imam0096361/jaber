@@ -45,8 +45,7 @@ COPY --from=builder /app/main .
 # Copy frontend files
 COPY --from=builder /app/frontend ./frontend
 
-# Copy environment file (will be overridden by docker-compose)
-COPY --from=builder /app/.env .
+# Note: Environment variables are provided by docker-compose.yml
 
 # Create uploads directory and set permissions
 RUN mkdir -p /app/frontend/uploads && \
