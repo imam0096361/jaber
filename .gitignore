@@ -1,0 +1,50 @@
+# Logs
+*.log
+server.log
+logs/
+
+# Environment files
+.env.local
+.env.development
+.env.test
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Build artifacts
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+main
+
+# Test files
+coverage.txt
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Database files
+*.db
+*.sqlite
+
+# Uploads
+frontend/uploads/*
+!frontend/uploads/.gitkeep
+
+# Docker
+docker-compose.override.yml
+
+# Other
+rm

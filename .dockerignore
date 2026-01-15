@@ -1,0 +1,68 @@
+# .dockerignore - Files to exclude from Docker build context
+
+# Git
+.git
+.gitignore
+.gitattributes
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+server.log
+logs/
+
+# Test files
+test/
+*_test.go
+coverage.txt
+
+# Documentation
+*.md
+!README.md
+docs/
+
+# CI/CD
+.github/
+.gitlab-ci.yml
+
+# Environment files (will be copied separately)
+.env.local
+.env.development
+.env.test
+
+# Dependencies (will be downloaded during build)
+vendor/
+
+# Build artifacts
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+main
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Database files
+*.db
+*.sqlite
+
+# Docker files
+docker-compose.override.yml
+Dockerfile.dev
+
+# Other
+rm
