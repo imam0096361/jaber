@@ -27,6 +27,8 @@ docker:
 	@chmod -R 755 ./src/database/init
 	@mkdir -p ./frontend/uploads
 	@chmod -R 777 ./frontend/uploads
+	@echo "Workaround for docker-compose v1 bug: removing old containers..."
+	@docker-compose down --remove-orphans || true
 	@docker-compose up --build
 
 fix-permissions:
