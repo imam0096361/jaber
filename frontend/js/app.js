@@ -66,11 +66,10 @@ function selectCategory(category) {
     });
 
     const featuredSection = document.querySelector('.featured-section');
-    if (category === 'সব') {
+    // Always show the featured section and reload it with the category filter
+    if (featuredSection) {
         featuredSection.style.display = 'block';
         loadFeatured();
-    } else {
-        featuredSection.style.display = 'none';
     }
 
     loadArticles();
