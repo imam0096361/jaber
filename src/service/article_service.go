@@ -46,8 +46,17 @@ func (s *articleService) GetAllArticles(category, search string, limit int) ([]m
 	var items []model.Article
 	query := s.db.Order("updated_at desc")
 
+	// Debug logging
+	println("=== GetAllArticles Debug ===")
+	println("Category received:", category)
+	println("Category length:", len(category))
+	println("Category bytes:", []byte(category))
+
 	if category != "" && category != "সব" {
+		println("Applying category filter:", category)
 		query = query.Where("category = ?", category)
+	} else {
+		println("No category filter applied (showing all)")
 	}
 
 	if search != "" {
@@ -62,6 +71,13 @@ func (s *articleService) GetAllArticles(category, search string, limit int) ([]m
 	if err := query.Find(&items).Error; err != nil {
 		return nil, err
 	}
+
+	println("Articles found:", len(items))
+	for i, item := range items {
+		println("Article", i, "- Category:", item.Category)
+	}
+	println("=========================")
+
 	return items, nil
 }
 
@@ -82,8 +98,15 @@ func (s *articleService) GetFeatured(category string, limit int) ([]model.Articl
 	var items []model.Article
 	query := s.db.Where("featured = ?", true).Order("updated_at desc")
 
+	// Debug logging
+	println("=== GetFeatured Debug ===")
+	println("Category received:", category)
+
 	if category != "" && category != "সব" {
+		println("Applying category filter:", category)
 		query = query.Where("category = ?", category)
+	} else {
+		println("No category filter applied (showing all featured)")
 	}
 
 	if limit > 0 {
@@ -93,6 +116,10 @@ func (s *articleService) GetFeatured(category string, limit int) ([]model.Articl
 	if err := query.Find(&items).Error; err != nil {
 		return nil, err
 	}
+
+	println("Featured articles found:", len(items))
+	println("======================")
+
 	return items, nil
 }
 
