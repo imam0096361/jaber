@@ -57,11 +57,20 @@ async function loadCategories() {
 
 // Select category
 function selectCategory(category) {
+    console.log('!!!!! selectCategory CALLED !!!!!');
+    console.log('OLD currentCategory:', currentCategory);
+    console.log('NEW category parameter:', category);
+
     currentCategory = category;
+
+    console.log('currentCategory AFTER assignment:', currentCategory);
+    console.log('typeof currentCategory:', typeof currentCategory);
+
     document.querySelectorAll('.category-btn').forEach(btn => {
         btn.classList.remove('active');
         if (btn.textContent === category) {
             btn.classList.add('active');
+            console.log('Added active class to button:', category);
         }
     });
 
@@ -72,7 +81,9 @@ function selectCategory(category) {
         loadFeatured();
     }
 
+    console.log('About to call loadArticles with currentCategory:', currentCategory);
     loadArticles();
+    console.log('!!!!! selectCategory FINISHED !!!!!');
 }
 
 // Load featured articles
