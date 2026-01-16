@@ -137,16 +137,22 @@ async function loadFeatured() {
 
 // Load articles
 async function loadArticles() {
-    console.log('Loading articles for category:', currentCategory);
+    console.log('=== loadArticles called ===');
+    console.log('currentCategory:', currentCategory);
+    console.log('currentCategory type:', typeof currentCategory);
+    console.log('currentCategory length:', currentCategory ? currentCategory.length : 0);
+
     try {
         const searchQuery = document.getElementById('searchInput').value;
         let url = `${API_BASE}/articles`;
 
         const params = new URLSearchParams();
         params.append('limit', '15');
-        if (currentCategory !== 'সব') {
-            params.append('category', currentCategory);
-        }
+
+        // ALWAYS send category parameter (even if it's "সব")
+        // This helps with debugging
+        params.append('category', currentCategory || 'সব');
+
         if (searchQuery) {
             params.append('search', searchQuery);
         }
@@ -156,9 +162,16 @@ async function loadArticles() {
         }
 
         console.log('Fetching articles from:', url);
+        console.log('Full URL with params:', url);
+
         const response = await fetch(url);
         const articles = await response.json();
         console.log('Received articles:', articles.length, 'articles');
+
+        // Log each article's category
+        articles.forEach((article, index) => {
+            console.log(`Article ${index}: ${article.title} - Category: ${article.category}`);
+        });
 
         const articlesDiv = document.getElementById('articles');
         articlesDiv.innerHTML = '';
