@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Test - Category Filter</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        button {
+            margin: 5px;
+            padding: 10px 15px;
+            cursor: pointer;
+        }
+        pre {
+            background: #f5f5f5;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>Category Filter Test</h1>
+    
+    <div class="test-section">
+        <h2>Test Category Filtering</h2>
+        <button onclick="testCategory('সব')">Test: সব (All)</button>
+        <button onclick="testCategory('প্রযুক্তি')">Test: প্রযুক্তি (Technology)</button>
+        <button onclick="testCategory('রাজনীতি')">Test: রাজনীতি (Politics)</button>
+        <button onclick="testCategory('খেলাধুলা')">Test: খেলাধুলা (Sports)</button>
+    </div>
+
+    <div class="test-section">
+        <h2>Results:</h2>
+        <div id="results"></div>
+    </div>
+
+    <script>
+        async function testCategory(category) {
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = '<p>Loading...</p>';
+
+            try {
+                let url = '/api/articles?limit=15';
+                if (category !== 'সব') {
+                    url += '&category=' + encodeURIComponent(category);
+                }
+
+                console.log('Testing URL:', url);
+                
+                const response = await fetch(url);
+                const articles = await response.json();
+
+                let html = `<h3>Category: ${category}</h3>`;
+                html += `<p><strong>Total articles returned:</strong> ${articles.length}</p>`;
+                html += `<p><strong>URL:</strong> ${url}</p>`;
+                
+                if (articles.length > 0) {
+                    html += '<h4>Articles:</h4><ul>';
+                    articles.forEach(article => {
+                        html += `<li><strong>${article.title}</strong> - Category: <em>${article.category}</em></li>`;
+                    });
+                    html += '</ul>';
+                } else {
+                    html += '<p>No articles found for this category.</p>';
+                }
+
+                resultsDiv.innerHTML = html;
+            } catch (error) {
+                resultsDiv.innerHTML = `<p style="color: red;">Error: ${error.message}</p>`;
+                console.error('Error:', error);
+            }
+        }
+
+        // Auto-test on load
+        window.onload = () => {
+            testCategory('সব');
+        };
+    </script>
+</body>
+</html>

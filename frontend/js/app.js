@@ -137,6 +137,7 @@ async function loadFeatured() {
 
 // Load articles
 async function loadArticles() {
+    console.log('Loading articles for category:', currentCategory);
     try {
         const searchQuery = document.getElementById('searchInput').value;
         let url = `${API_BASE}/articles`;
@@ -154,8 +155,10 @@ async function loadArticles() {
             url += '?' + params.toString();
         }
 
+        console.log('Fetching articles from:', url);
         const response = await fetch(url);
         const articles = await response.json();
+        console.log('Received articles:', articles.length, 'articles');
 
         const articlesDiv = document.getElementById('articles');
         articlesDiv.innerHTML = '';
