@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="bn">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Database Category Checker</title>
+    <style>
+        body {
+            font-family: 'Hind Siliguri', Arial, sans-serif;
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #333;
+            border-bottom: 3px solid #1877f2;
+            padding-bottom: 10px;
+        }
+
+        .category-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-card h3 {
+            margin: 0 0 10px 0;
+            font-size: 16px;
+        }
+
+        .stat-card .count {
+            font-size: 32px;
+            font-weight: bold;
+        }
+
+        .article-list {
+            margin-top: 20px;
+        }
+
+        .article-item {
+            background: #f9f9f9;
+            padding: 15px;
+            margin: 10px 0;
+            border-left: 4px solid #1877f2;
+            border-radius: 4px;
+        }
+
+        .article-item h4 {
+            margin: 0 0 5px 0;
+            color: #333;
+        }
+
+        .article-item .meta {
+            color: #666;
+            font-size: 14px;
+        }
+
+        button {
+            background: #1877f2;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 5px;
+        }
+
+        button:hover {
+            background: #1565c0;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>📊 Database Category Statistics</h1>
+
+        <button onclick="loadStats()">🔄 Refresh Statistics</button>
+        <button onclick="loadAllArticles()">📰 Show All Articles</button>
+
+        <div id="stats" class="category-stats"></div>
+        <div id="articles" class="article-list"></div>
+    </div>
+
+    <script>
+        async function loadStats() {
+            const statsDiv = document.getElementById('stats');
+            statsDiv.innerHTML = '<div class="loading">Loading statistics...</div>';
+
+            try {
+                // Get all articles
+                const response = await fetch('/api/articles?limit=1000');
+                const articles = await response.json();
+
+                // Count by category
+                const categoryCounts = {};
+                articles.forEach(article => {
+                    const cat = article.category || 'Unknown';
+                    categoryCounts[cat] = (categoryCounts[cat] || 0) + 1;
+                });
+
+                // Display stats
+                let html = '';
+                const categories = ['জাতীয়', 'রাজনীতি', 'খেলাধুলা', 'প্রযুক্তি', 'স্বাস্থ্য', 'বিনোদন', 'আন্তর্জাতিক', 'অন্যান্য'];
+
+                categories.forEach(cat => {
+                    const count = categoryCounts[cat] || 0;
+                    html += `
+                        <div class="stat-card">
+                            <h3>${cat}</h3>
+                            <div class="count">${count}</div>
+                            <button onclick="showCategory('${cat}')" style="margin-top: 10px; padding: 8px 16px; font-size: 14px;">View</button>
+                        </div>
+                    `;
+                });
+
+                // Add any uncategorized
+                Object.keys(categoryCounts).forEach(cat => {
+                    if (!categories.includes(cat)) {
+                        html += `
+                            <div class="stat-card" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                                <h3>${cat}</h3>
+                                <div class="count">${categoryCounts[cat]}</div>
+                                <button onclick="showCategory('${cat}')" style="margin-top: 10px; padding: 8px 16px; font-size: 14px;">View</button>
+                            </div>
+                        `;
+                    }
+                });
+
+                statsDiv.innerHTML = html;
+            } catch (error) {
+                statsDiv.innerHTML = `<div style="color: red;">Error: ${error.message}</div>`;
+            }
+        }
+
+        async function showCategory(category) {
+            const articlesDiv = document.getElementById('articles');
+            articlesDiv.innerHTML = '<div class="loading">Loading articles...</div>';
+
+            try {
+                const url = `/api/articles?category=${encodeURIComponent(category)}&limit=100`;
+                const response = await fetch(url);
+                const articles = await response.json();
+
+                let html = `<h2>Category: ${category} (${articles.length} articles)</h2>`;
+
+                if (articles.length === 0) {
+                    html += '<p>No articles found in this category.</p>';
+                } else {
+                    articles.forEach(article => {
+                        html += `
+                            <div class="article-item">
+                                <h4>${article.title}</h4>
+                                <div class="meta">
+                                    Category: <strong>${article.category}</strong> | 
+                                    Author: ${article.author} | 
+                                    Featured: ${article.featured ? 'Yes' : 'No'}
+                                </div>
+                            </div>
+                        `;
+                    });
+                }
+
+                articlesDiv.innerHTML = html;
+            } catch (error) {
+                articlesDiv.innerHTML = `<div style="color: red;">Error: ${error.message}</div>`;
+            }
+        }
+
+        async function loadAllArticles() {
+            const articlesDiv = document.getElementById('articles');
+            articlesDiv.innerHTML = '<div class="loading">Loading all articles...</div>';
+
+            try {
+                const response = await fetch('/api/articles?limit=1000');
+                const articles = await response.json();
+
+                let html = `<h2>All Articles (${articles.length} total)</h2>`;
+
+                articles.forEach(article => {
+                    html += `
+                        <div class="article-item">
+                            <h4>${article.title}</h4>
+                            <div class="meta">
+                                Category: <strong>${article.category}</strong> | 
+                                Author: ${article.author} | 
+                                Featured: ${article.featured ? 'Yes' : 'No'}
+                            </div>
+                        </div>
+                    `;
+                });
+
+                articlesDiv.innerHTML = html;
+            } catch (error) {
+                articlesDiv.innerHTML = `<div style="color: red;">Error: ${error.message}</div>`;
+            }
+        }
+
+        // Auto-load on page load
+        window.onload = () => {
+            loadStats();
+        };
+    </script>
+</body>
+
+</html>
