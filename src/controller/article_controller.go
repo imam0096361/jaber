@@ -52,6 +52,12 @@ func (a *ArticleController) GetAll(c *fiber.Ctx) error {
 	search := c.Query("search")
 	limit, _ := strconv.Atoi(c.Query("limit"))
 
+	// Debug logging
+	println("=== Controller GetAll ===")
+	println("Raw category from query:", category)
+	println("Category bytes:", []byte(category))
+	println("=========================")
+
 	items, err := a._ArticleService.GetAllArticles(category, search, limit)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(response.ErrorDetails{
