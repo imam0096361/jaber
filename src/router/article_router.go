@@ -13,10 +13,15 @@ import (
 func ArticleRoutes(router fiber.Router, s service.ArticleService) {
 	articleController := controller.NewArticleController(s)
 
-	// Cache Config
+	// Cache Config - Include full URI (with query params) in cache key
 	cacheConfig := cache.Config{
 		Expiration:   30 * time.Second,
 		CacheControl: true,
+		KeyGenerator: func(c *fiber.Ctx) string {
+			// Include the full path AND query string in the cache key
+			// This ensures different query parameters get different cached responses
+			return c.OriginalURL()
+		},
 	}
 
 	router.Get("/articles", cache.New(cacheConfig), articleController.GetAll)
