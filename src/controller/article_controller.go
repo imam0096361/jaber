@@ -23,7 +23,13 @@ func NewArticleController(s service.ArticleService) *ArticleController {
 
 func (a *ArticleController) CreateArticle(c *fiber.Ctx) error {
 	req := new(model.Article)
+	
+	// Debug: Log the raw body
+	println("=== CreateArticle Debug ===")
+	println("Raw body:", string(c.Body()))
+	
 	if err := c.BodyParser(req); err != nil {
+		println("Body parser error:", err.Error())
 		return c.Status(fiber.StatusBadRequest).JSON(response.ErrorDetails{
 			Code:    fiber.StatusBadRequest,
 			Status:  "fail",
@@ -32,10 +38,16 @@ func (a *ArticleController) CreateArticle(c *fiber.Ctx) error {
 		})
 	}
 
+	println("Parsed article - Title:", req.Title)
+	println("Parsed article - Category:", req.Category)
+	println("Parsed article - Author:", req.Author)
+	println("Parsed article - Featured:", req.Featured)
+
 	req.Created = time.Now()
 
 	created, err := a._ArticleService.CreateArticle(req)
 	if err != nil {
+		println("CreateArticle service error:", err.Error())
 		return c.Status(fiber.StatusInternalServerError).JSON(response.ErrorDetails{
 			Code:    fiber.StatusInternalServerError,
 			Status:  "error",
@@ -44,6 +56,9 @@ func (a *ArticleController) CreateArticle(c *fiber.Ctx) error {
 		})
 	}
 
+	println("Article created successfully with ID:", created.ID)
+	println("===========================")
+	
 	return c.Status(fiber.StatusCreated).JSON(created)
 }
 
