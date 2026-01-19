@@ -9,14 +9,15 @@ services:
       POSTGRES_PASSWORD: root
       POSTGRES_DB: news
       PGDATA: /var/lib/postgresql/data/pgdata
-      # Use MD5 authentication (more compatible)
-      POSTGRES_HOST_AUTH_METHOD: md5
-      POSTGRES_INITDB_ARGS: "--auth-host=md5 --auth-local=md5"
+      # Allow trust authentication (no password needed from Docker network)
+      POSTGRES_HOST_AUTH_METHOD: trust
     ports:
       - "${DB_PORT:-5432}:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./src/database/init:/docker-entrypoint-initdb.d:ro
+      - ./src/database/pg_hba.conf:/var/lib/postgresql/pg_hba.conf:ro
+    command: [ "postgres", "-c", "hba_file=/var/lib/postgresql/pg_hba.conf" ]
     networks:
       - news-network
     healthcheck:
