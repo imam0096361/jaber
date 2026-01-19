@@ -5,10 +5,13 @@ services:
     container_name: news-postgres
     restart: unless-stopped
     environment:
-      POSTGRES_USER: ${DB_USER:-postgres}
-      POSTGRES_PASSWORD: ${DB_PASSWORD:-root}
-      POSTGRES_DB: ${DB_NAME:-news}
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: news
       PGDATA: /var/lib/postgresql/data/pgdata
+      # Use MD5 authentication (more compatible)
+      POSTGRES_HOST_AUTH_METHOD: md5
+      POSTGRES_INITDB_ARGS: "--auth-host=md5 --auth-local=md5"
     ports:
       - "${DB_PORT:-5432}:5432"
     volumes:
@@ -17,7 +20,7 @@ services:
     networks:
       - news-network
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U ${DB_USER:-postgres} -d ${DB_NAME:-news}" ]
+      test: [ "CMD-SHELL", "pg_isready -U postgres -d news" ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -38,9 +41,9 @@ services:
       - APP_PORT=3000
       - DB_HOST=postgresdb
       - DB_PORT=5432
-      - DB_USER=${DB_USER:-postgres}
-      - DB_PASSWORD=${DB_PASSWORD:-root}
-      - DB_NAME=${DB_NAME:-news}
+      - DB_USER=postgres
+      - DB_PASSWORD=root
+      - DB_NAME=news
       - JWT_SECRET=${JWT_SECRET:-change-me-in-production}
       - JWT_ACCESS_EXP_MINUTES=${JWT_ACCESS_EXP_MINUTES:-60}
       - JWT_REFRESH_EXP_DAYS=${JWT_REFRESH_EXP_DAYS:-7}
